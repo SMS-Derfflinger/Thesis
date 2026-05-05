@@ -1,0 +1,134 @@
+#### syscall
+
+[/]#syscall_bench openclose ls
+Syscall benchmark result:
+operation      : openclose
+path           : ls
+iterations     : 10000
+rw_size        : 512
+total_us_est   : 116666
+avg_us_est     : 11
+
+[/]#syscall_bench read ls
+Syscall benchmark result:
+operation      : read
+path           : ls
+iterations     : 10000
+rw_size        : 512
+total_us_est   : 66666
+avg_us_est     : 6
+
+[/]#syscall_bench seek ls
+Syscall benchmark result:
+operation      : seek
+path           : ls
+iterations     : 10000
+rw_size        : 512
+total_us_est   : 16666
+avg_us_est     : 1
+
+[/]#syscall_bench stat ls
+Syscall benchmark result:
+operation      : stat
+path           : ls
+iterations     : 10000
+rw_size        : 512
+total_us_est   : 83333
+avg_us_est     : 8
+
+[/]#syscall_bench write tmp
+Syscall benchmark result:
+operation      : write
+path           : tmp
+iterations     : 5000
+rw_size        : 512
+total_us_est   : 533333
+avg_us_est     : 106
+
+#### malloc
+
+Malloc benchmark result:
+alloc_size     : 64
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 33333
+avg_us_est     : 16
+
+Malloc benchmark result:
+alloc_size     : 128
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 33333
+avg_us_est     : 16
+
+Malloc benchmark result:
+alloc_size     : 256
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 50000
+avg_us_est     : 25
+
+Malloc benchmark result:
+alloc_size     : 512
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 100000
+avg_us_est     : 50
+
+Malloc benchmark result:
+alloc_size     : 1024
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 166666
+avg_us_est     : 83
+
+Malloc benchmark result:
+alloc_size     : 2048
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 333333
+avg_us_est     : 166
+
+Malloc benchmark result:
+alloc_size     : 4096
+count_per_round: 20
+rounds         : 50
+total_allocs   : 1000
+total_frees    : 1000
+total_us_est   : 583333
+avg_us_est     : 291
+
+#### 吞吐量
+
+[/]#io_throughput ls tmp
+I/O throughput benchmark result:
+source         : ls
+target         : tmp
+buf_size       : 512
+repeat         : 5
+total_bytes    : 321720
+elapsed_us_est : 116666
+bytes_per_sec  : 2757600
+kb_per_sec     : 2691
+
+I/O throughput benchmark result:
+source         : v6pp_splash.bmp
+target         : tmp
+buf_size       : 512
+repeat         : 1
+total_bytes    : 1920138
+elapsed_us_est : 733333
+bytes_per_sec  : 2618371
+kb_per_sec     : 2556

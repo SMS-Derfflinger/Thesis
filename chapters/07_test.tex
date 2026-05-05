@@ -2,11 +2,9 @@
 
 \section{测试方案设计}
 
-\subsection{测试环境与指标设计}
+本章测试的目标是验证系统在完成 Rust 重构和 RISC-V 迁移之后的功能正确性，并对不同版本在典型用户态操作中的性能表现进行对比。测试对象包括三个版本：原始 C++ + IA32 版本、Rust + IA32 重构版本和 Rust + RISC-V 迁移版本。三者均在 QEMU 虚拟环境中运行，以减少物理硬件差异对测试结果的影响。
 
-本章测试的目标是评估系统在完成 Rust 重构和 RISC-V 迁移之后的功能正确性与性能表现，并分析不同实现方案之间的差异。测试内容主要分为三个方面：第一，进行功能测试，验证文件系统、设备管理和内存分配等核心模块是否能够稳定工作；第二，进行性能测试，测量系统调用延迟、文件 I/O 吞吐量和内存分配性能等关键指标；第三，对比 Rust 与 C++版本、RISC-V 与 IA32 版本在性能上的差异，并结合体系结构与实现机制分析原因。
-
-为了保证对比结果具有可解释性，将测试对象划分为以下几组：C++ + IA32 原始版本、Rust + IA32 重构版本、Rust + RISC-V 迁移版本。测试环境统一使用 QEMU 虚拟机，以减少物理硬件差异对结果的影响，并固定以下条件：
+测试环境统一控制以下条件：
 
 \begin{enumerate}
   \item QEMU 版本；
@@ -15,12 +13,10 @@
   \item 编译优化选项与编译器版本。
 \end{enumerate}
 
-性能测试方面，对于 IA32 版本和 RISC-V 版本，保持相同的磁盘镜像、相同的用户态测试程序和一致的测试轮数。若两种架构在启动方式、设备模型或用户程序格式上存在差异，会在测试环境说明中明确指出。总的测试环境如下：
-
 \begin{table}[htbp]
   \centering
   \caption{测试环境说明}
-  \begin{tabular}{p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}}
+  \begin{tabular}{p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}}
     \toprule
     \textbf{测试环境} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
     \midrule
@@ -29,20 +25,20 @@
     QEMU 版本 & i386 6.2.0 & i386 6.2.0 & riscv64 10.0.2 \\
     QEMU 分配内存大小 & 128MB & 128MB & 128MB \\
     编译器版本 & g++ 11.4.0 & rustc 1.96.0-nightly & rustc 1.96.0-nightly \\
-    编译选项 & 无编译优化 & --release & --release \\
+    编译选项 & 无编译优化 & \texttt{--release} & \texttt{--release} \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-测试指标方面，本章围绕以下三类性能指标展开：文件系统相关系统调用延迟：open、close、read、write、stat、seek 等常用文件系统相关系统调用的平均运行时间和延迟。文件 I/O 吞吐量，包括小块读写与大块读写的差异。内存分配性能，包括小对象动态分配性能、大块内存申请性能，以及重复分配释放场景下的平均开销。
+性能测试使用三个用户态测试程序完成。系统调用延迟测试程序 \texttt{syscall\_bench.c} 循环执行 open/close、read、seek、stat 和 write 等操作，使用 \texttt{times()} 记录前后时钟并估算平均耗时。内存分配测试程序 \texttt{malloc\_bench.c} 对不同大小的内存块重复执行 malloc/free，用于观察用户态动态分配接口的基本开销。文件 I/O 吞吐量测试程序 \texttt{io\_throughput.c} 反复读取源文件并写入目标文件，统计总传输字节数和估算吞吐率。
 
-\subsection{测试程序设计}
-
-本章基于现有 programs/目录下的已有用户态程序添加了三类用户态测试程序扩展实现，具体可见附录。系统调用延迟测试程序 syscall\_bench.c：基于 performance.c 的结构，循环执行指定文件系统系统调用若干次，使用 times()记录开始和结束时间，计算平均延迟。文件 I/O 吞吐量测试程序 io\_throughput.c：基于 copyfile.c 扩展，反复进行固定大小文件的顺序读写，统计总字节数和总耗时，计算吞吐量。内存分配性能测试程序 malloc\_bench.c：基于 malloc.c 扩展，循环调用 malloc/free，分别测试：小块对象分配（64B、128B、256B）、中等块分配（512B、1KB）、大块分配（2KB、4KB），并记录总耗时。
+需要说明的是，测试程序使用系统时钟 tick 估算微秒级时间，系统时钟频率为 60Hz，因此测试结果更适合用于观察数量级和版本间相对差异，而不应理解为精确硬件计时结果。原始 C++ 版本暂不支持 malloc 测试所需的用户态动态分配接口，因此内存分配性能只比较 Rust + IA32 与 Rust + RISC-V 两个版本。
 
 \section{功能测试}
 
-功能测试主要验证重构后文件系统、内存管理功能是否正确。测试主要验证页分配、堆分配和用户空间增长是否正常，文件创建、打开、关闭和读写，目录创建与路径解析、文件系统和 shell 长期运行后的稳定性等。测试时直接利用现有 ls、cat、mkdir、forks 等用户程序，并手工输入命令验证运行结果。这类测试虽然不直接给出性能结论，但可以验证系统的稳定性。经测试，系统的文件系统和内存管理均能稳定运行，文件操作正常，用户内存分配正常，可以创建多个子进程后仍稳定运行。
+功能测试主要验证重构后的文件系统、内存管理和基础设备路径是否能够稳定工作。测试内容包括页分配与用户空间增长、文件创建与删除、文件打开与关闭、文件读写、目录创建与路径解析、控制台输入输出以及 shell 长时间运行后的基本稳定性。测试过程中使用 ls、cat、mkdir、forks 等已有用户程序，并结合新增测试程序进行手工命令验证。
+
+从功能测试结果看，Rust + IA32 版本能够完成原教学系统中的基本文件操作和用户程序执行流程；Rust + RISC-V 版本能够完成串口初始化、文件系统装载、shell 运行和块设备读写等关键路径。这说明在保持原系统教学结构的基础上，内存管理、文件系统和设备访问路径已经能够在两个 Rust 版本中形成可运行闭环。
 
 \begin{figure}[htbp]
   \centering
@@ -74,22 +70,71 @@
 
 \section{性能测试}
 
-性能测试中，所有性能数据都在 QEMU 虚拟机中由用户态测试程序直接输出到控制台，再手工记录收集。每组测试至少执行 5 次，取平均值；若波动较大，去掉最大值和最小值后再取平均。为提高可比性，保证以下条件一致：每次测试前文件系统状态相同、使用同一批测试文件、不同时运行其他干扰程序等。输出结果统一为表格和柱状图，单位使用“微秒/次”。
-
-文件系统相关系统调用延迟测试的基本方法为：在单个用户程序中循环执行同一种系统调用若干次，记录循环前后的时间差，再除以调用次数，得到平均延迟。其中缓冲区大小为 512 字节，目标文件均为 ls 程序，系统调用执行的次数均为 10000 次，得到的测试结果如下：
+系统调用延迟测试使用 \texttt{syscall\_bench.c} 完成。除 write 操作固定执行 5000 次外，其余操作均执行 10000 次；读写缓冲区大小为 512 字节。测试目标文件主要为 \texttt{ls}，write 操作写入临时文件 \texttt{tmp}。整理后的平均延迟如\cref{tab:syscall-bench} 所示。
 
 \begin{table}[htbp]
   \centering
-  \caption{文件系统相关系统调用平均延迟（微秒）}
-  \begin{tabular}{p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}}
+  \caption{文件系统相关系统调用平均延迟（微秒/次）}\label{tab:syscall-bench}
+  \begin{tabular}{p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}}
     \toprule
     \textbf{系统调用} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
     \midrule
-    open/close & 20 & 8 & 13 \\
-    read & 25 & 6 & 6 \\
-    seek & 1 & 1 & 1 \\
-    stat & 16 & 6 & 8 \\
-    write & 103 & 90 & 106 \\
+    open/close & 20 & 8 & 11 \\
+    read       & 25 & 6 & 6 \\
+    seek       & 1  & 1 & 1 \\
+    stat       & 16 & 6 & 8 \\
+    write      & 103 & 90 & 106 \\
     \bottomrule
   \end{tabular}
 \end{table}
+
+内存分配测试使用 \texttt{malloc\_bench.c} 完成。每种块大小下，测试程序每轮分配 20 个对象并释放，重复 50 轮，共执行 1000 次 malloc 和 1000 次 free。原始 C++ 版本暂不支持该测试，因此表中以空缺标记。结果如\cref{tab:malloc-bench} 所示。
+
+\begin{table}[htbp]
+  \centering
+  \caption{用户态 malloc/free 平均延迟（微秒/次）}\label{tab:malloc-bench}
+  \begin{tabular}{p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}}
+    \toprule
+    \textbf{分配大小} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
+    \midrule
+    64B   & -- & 166 & 16 \\
+    128B  & -- & 166 & 16 \\
+    256B  & -- & 150 & 25 \\
+    512B  & -- & 158 & 50 \\
+    1KB   & -- & 166 & 83 \\
+    2KB   & -- & 166 & 166 \\
+    4KB   & -- & 150 & 291 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+文件 I/O 吞吐量测试使用 \texttt{io\_throughput.c} 完成。小文件测试以 \texttt{ls} 为源文件，重复复制 5 次；较大文件测试以 \texttt{v6pp\_splash.bmp} 为源文件，复制 1 次。由于小文件测试受缓存状态和 tick 粒度影响较明显，表中对同一版本的多次记录取平均值。结果如\cref{tab:io-bench} 所示。
+
+\begin{table}[htbp]
+  \centering
+  \caption{文件 I/O 吞吐量测试结果（KB/s）}\label{tab:io-bench}
+  \begin{tabular}{p{0.24\textwidth}p{0.19\textwidth}p{0.19\textwidth}p{0.19\textwidth}}
+    \toprule
+    \textbf{测试文件} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
+    \midrule
+    \texttt{ls}，重复 5 次 & 3902 & 2503 & 2691 \\
+    \texttt{v6pp\_splash.bmp}，重复 1 次 & 3409 & 4017 & 2556 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{结果分析}
+
+从系统调用延迟结果看，Rust + IA32 版本在 open/close、read 和 stat 等文件系统相关操作上均低于原始 C++ + IA32 版本。这一差异并不能简单归因于语言本身，而更可能来自重构过程中对文件对象、inode 引用和错误处理路径的重新整理。Rust 版本中，文件对象和 inode 的生命周期通过引用封装和析构逻辑集中管理，路径解析、文件表分配和资源回收的职责边界更清楚，减少了部分分散状态维护带来的额外开销。write 操作中三者差异较小，说明写路径更多受缓冲区缓存、块设备写回和 QEMU 虚拟设备行为影响，而不完全取决于上层文件对象管理方式。
+
+Rust + RISC-V 版本在 read、seek、stat 等操作上与 Rust + IA32 接近，open/close 稍慢，write 与原始 C++ 版本接近。考虑到 RISC-V 版本底层已经切换为 Sv39 页表、trap 机制和 VirtIO MMIO 块设备，这一结果说明文件系统上层结构在迁移后基本保持稳定，主要差异集中在底层设备和体系结构适配路径。对于教学系统而言，这一点较为重要：文件系统的核心算法可以在不同体系结构上复用，而平台相关变化主要被限制在页表、trap 和设备驱动等底层模块中。
+
+内存分配测试中，Rust + RISC-V 在 64B 至 1KB 的小对象分配上明显快于 Rust + IA32，而在 2KB 时二者接近，在 4KB 时 RISC-V 版本开销更高。这与分配器的分层设计相吻合：小对象通常由更细粒度的堆分配路径处理，能够较好地复用已获得的内存区域；当分配大小接近或达到页大小时，测试更容易触及页级分配、映射或空闲区管理路径，开销随之上升。原始 C++ 版本未纳入该项测试，但从结构上看，Rust 重构后通过 RAII、引用封装和生命周期约束将分配对象的申请与释放关系表达得更明确，这对减少资源泄漏和错误释放更有价值；性能测试则说明这种更明确的资源管理方式并未妨碍系统完成基本动态分配需求。
+
+文件 I/O 吞吐量结果波动相对更大。小文件测试中，原始 C++ + IA32 平均吞吐量较高，Rust + RISC-V 与 Rust + IA32 接近；较大位图文件测试中，Rust + IA32 表现最好，Rust + RISC-V 低于 IA32 两个版本。该结果与测试环境有关：I/O 吞吐量不仅受文件系统代码影响，也受 QEMU 设备模型、缓存命中、块设备驱动、写回策略和 60Hz tick 计时粒度影响。RISC-V 版本采用 VirtIO MMIO 块设备，虽然接口更适合现代虚拟化环境，但当前实现仍以正确性和结构清晰为优先，后续仍有优化请求合并、缓存策略和异步 I/O 路径的空间。
+
+综合来看，Rust 重构版本在保持 Unix V6++ 教学结构的同时，使内存管理和文件系统的资源关系更加清楚。系统调用和内存分配测试说明，类型化接口、RAII 风格封装和显式错误传播并没有带来不可接受的运行开销；相反，在若干文件系统操作上，重构后的 IA32 版本表现更好。RISC-V 迁移版本的结果则表明，系统已经能够在新的体系结构和设备模型上运行主要功能，性能差异主要体现为底层平台适配和驱动实现成熟度的差异。
+
+\section{本章小结}
+
+本章对原始 C++ + IA32、Rust + IA32 和 Rust + RISC-V 三个版本进行了功能与性能测试。功能测试表明，两个 Rust 版本均能够完成文件系统装载、shell 运行、文件读写和用户程序执行等基本任务。性能测试从系统调用延迟、内存分配开销和文件 I/O 吞吐量三个角度进行了对比。结果显示，Rust + IA32 在多项文件系统系统调用上优于原始 C++ + IA32，Rust + RISC-V 在完成体系结构迁移后保持了可接受的系统调用表现；内存分配测试体现出分层分配路径在不同块大小下的开销变化；I/O 吞吐量则受设备模型和计时粒度影响较大。整体而言，测试结果验证了本课题内存管理和文件系统 Rust 重构的可行性，也说明 RISC-V 迁移已经具备基本运行和进一步优化的基础。
