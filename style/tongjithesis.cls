@@ -953,7 +953,8 @@
       \vspace{60pt}
 
       \begin{information}{M{5em}M{22em}}
-        \tjfonttitle\heiti{课题名称} & \ulinecentered{\tjfonttitle\heiti{\tongjithesistitle}} \\
+        \tjfonttitle\heiti{课题名称} & \ulinecentered{\tjfonttitle\heiti{基于 RISC-V 和 Rust 的 UnixV6++操作}} \\
+        \tjfonttitle\heiti{} & \ulinecentered{\tjfonttitle\heiti{系统内存管理、文件系统重构与移植}} \\
         \tjfonttitle\heiti{副\enskip{}标\enskip{}题} & \ulinecentered{\tjfonttitle\heiti{\tongjithesissubtitle}} \\
         \tjfonttitle\heiti{学\quad{}\quad{}院} & \ulinecentered{\tjfonttitle\heiti{\tongjischool}} \\
         \tjfonttitle\heiti{专\quad{}\quad{}业} & \ulinecentered{\tjfonttitle\heiti{\tongjimajor}} \\
