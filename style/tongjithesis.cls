@@ -905,7 +905,7 @@
 \let\oldtabular\tabular
 \let\endoldtabular\endtabular
 \newenvironment{information}[1][h!]{
-  \renewcommand{\arraystretch}{1.5}
+  \renewcommand{\arraystretch}{1.35}
   \setlength{\tabcolsep}{8pt}
   \tjfontcover\oldtabular[#1]
 }{\renewcommand{\arraystretch}{1.2}\endoldtabular
@@ -964,7 +964,7 @@
         \tjfonttitle\heiti{日\quad{}\quad{}期} & \ulinecentered{\tjfonttitle\heiti{\tongjithesisyear{}年\tongjithesismonth{}月\tongjithesisday{}日}} \\
       \end{information}
 
-      \vfill
+      \vspace*{-0.6cm}
     \end{center}
   \end{titlepage}
   \global\tjbindinglinetrue
