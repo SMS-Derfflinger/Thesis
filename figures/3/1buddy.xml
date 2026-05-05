@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="buddy-alloc" name="Buddy 分配机制示意图">
+    <mxGraphModel dx="1362" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Buddy 分配机制示意图" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="20" width="280" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="start" value="初始空闲块&#xa;order = 3&#xa;8 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="90" y="100" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="split1a" value="order = 2&#xa;4 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="340" y="70" width="140" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="split1b" value="order = 2&#xa;4 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="340" y="160" width="140" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="split2a" value="order = 1&#xa;2 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="560" y="50" width="130" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="split2b" value="order = 1&#xa;2 pages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="560" y="120" width="130" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="alloc" value="分配结果&#xa;申请 2 pages&#xa;返回 1 个 order=1 块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="770" y="50" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="free" value="释放后&#xa;若 buddy 空闲&#xa;则向上合并" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="770" y="180" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="merge1" value="合并为 order = 2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="560" y="260" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="merge2" value="继续合并为 order = 3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="340" y="280" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="按 2 的幂次管理空闲页块。&#xa;申请时拆分，释放时按伙伴关系合并。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="90" y="270" width="190" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="start" target="split1a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="start" target="split1b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="split1a" target="split2a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="split1a" target="split2b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="取 1 块" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="split2a" target="alloc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="释放" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="alloc" target="free">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="free" target="merge1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="merge1" target="merge2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

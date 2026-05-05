@@ -1,0 +1,55 @@
+<mxfile host="Electron" modified="2026-05-02T08:42:42.626Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="FjSsk9d4CVfJTlWWKUm-" version="24.4.0" type="device">
+  <diagram name="缓冲区数据结构与队列关系图" id="U2KRVzn4bhHKARqzVq7G">
+    <mxGraphModel dx="1252" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_lpvdFWj6ftk7uV51kup-2" value="BufferSlot&#xa;包含一个Buf和一个BufferData" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="380" y="40" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-3" value="Buf&#xa;保存设备号、块号、状态标志、错误码&#xa;并包含device_link、free_link、io_link" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="360" y="200" width="260" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-4" value="BufferData&#xa;保存512字节块数据" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-5" value="Buffer&#xa;上层访问包装对象&#xa;析构时自动调用brelse" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="740" y="210" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-6" value="BufRef&#xa;底层缓冲区引用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="740" y="340" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-7" value="空闲队列&#xa;free_list" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="120" y="430" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-8" value="设备缓存队列&#xa;buffer_list" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="400" y="430" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-9" value="设备I/O请求队列&#xa;io_queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="660" y="430" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-11" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-2" target="_lpvdFWj6ftk7uV51kup-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-12" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-2" target="_lpvdFWj6ftk7uV51kup-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-13" value="封装访问" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-3" target="_lpvdFWj6ftk7uV51kup-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-14" value="底层引用" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-3" target="_lpvdFWj6ftk7uV51kup-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-15" value="free_link" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-3" target="_lpvdFWj6ftk7uV51kup-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-16" value="device_link" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-3" target="_lpvdFWj6ftk7uV51kup-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_lpvdFWj6ftk7uV51kup-17" value="io_link" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="_lpvdFWj6ftk7uV51kup-3" target="_lpvdFWj6ftk7uV51kup-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

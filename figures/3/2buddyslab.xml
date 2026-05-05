@@ -1,0 +1,109 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="buddy-slab-flow" name="Buddy 与 Slab 协同分配流程图">
+    <mxGraphModel dx="1362" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="Buddy 与 Slab 协同分配流程图" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="310" y="20" width="380" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="req" value="内核内存申请请求" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="110" y="100" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="judge" value="申请大小&#xa;&lt;= 2048B ?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="350" y="90" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="slab" value="Slab 分配器&#xa;从现有 Slab 页分配对象槽位" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="610" y="40" width="210" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="slabcheck" value="是否存在可用 Slab 页？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="860" y="35" width="170" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="buddy4slab" value="Buddy 分配器&#xa;分配 1 个页框&#xa;作为新的 Slab 页" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="1080" y="40" width="190" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="slabinit" value="初始化 Slab 页&#xa;建立空闲槽位链表" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="1080" y="150" width="190" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="big" value="Buddy 分配器&#xa;按页或多页块分配" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="610" y="210" width="210" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ret" value="返回内存给调用者" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="860" y="240" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="free" value="释放请求" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="110" y="310" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="freejudge" value="对象来自 Slab 还是 Buddy？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="350" y="295" width="190" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="freeslab" value="归还到 Slab 页空闲槽位" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="610" y="320" width="210" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="freebuddy" value="归还到 Buddy 分配器&#xa;按伙伴关系合并" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="610" y="410" width="210" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="end" value="释放结束" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="860" y="390" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="req" target="judge">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="是" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="judge" target="slab">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="否" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="judge" target="big">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="slab" target="slabcheck">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="否" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="slabcheck" target="buddy4slab">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="是" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="slabcheck" target="ret">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="buddy4slab" target="slabinit">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="slabinit" target="ret">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="big" target="ret">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="free" target="freejudge">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="Slab" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="freejudge" target="freeslab">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="Buddy" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="freejudge" target="freebuddy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="freeslab" target="end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="freebuddy" target="end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

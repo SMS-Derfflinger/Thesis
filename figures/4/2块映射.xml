@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="block-map" name="块映射机制示意图">
+    <mxGraphModel dx="1362" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="块映射机制示意图" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="20" width="280" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="inode" value="Inode.i_addr[10]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="direct" value="直接块&#xa;i_addr[0..5]&#xa;逻辑块0-5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="60" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="indirect" value="一次间接块&#xa;i_addr[6..7]&#xa;逻辑块6-261" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="180" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="double" value="二次间接块&#xa;i_addr[8..9]&#xa;逻辑块262-33029" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="300" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="datadirect" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="620" y="80" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="indextable1" value="一级索引块&#xa;128个块号项" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="620" y="180" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="dataindirect" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="860" y="190" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="indextable2a" value="一级索引块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="620" y="300" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="indextable2b" value="二级索引块&#xa;128个块号项" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="860" y="295" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="datadouble" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="1090" y="305" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="note" value="块号不足时按需分配新块，&#xa;并更新inode地址表或索引块内容。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="80" y="430" width="250" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="inode" target="direct">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="inode" target="indirect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="inode" target="double">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="direct" target="datadirect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="indirect" target="indextable1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="indextable1" target="dataindirect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="double" target="indextable2a">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="indextable2a" target="indextable2b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="indextable2b" target="datadouble">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

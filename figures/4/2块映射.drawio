@@ -1,0 +1,67 @@
+<mxfile host="Electron" modified="2026-05-02T07:56:26.224Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="7qEdejxBEdHbGp22E8W_" version="24.4.0" type="device">
+  <diagram name="块映射机制示意图" id="u1WKpCDYP0JBtYuxY4K6">
+    <mxGraphModel dx="1252" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-2" value="Inode.i_addr[10]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="70" y="190" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-3" value="直接块&#xa;i_addr[0..5]&#xa;逻辑块0-5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="60" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-4" value="一次间接块&#xa;i_addr[6..7]&#xa;逻辑块6-261" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="180" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-5" value="二次间接块&#xa;i_addr[8..9]&#xa;逻辑块262-33029" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="320" y="300" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-6" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="550" y="75" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-7" value="一级索引块&#xa;128个块号项" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="560" y="185" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-8" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="760" y="195" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-9" value="一级索引块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="560" y="310" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-10" value="二级索引块&#xa;128个块号项" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="760" y="305" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-11" value="物理数据块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="960" y="315" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-13" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-2" target="IhsURKC4qqPCGV-Wk3Z5-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-14" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-2" target="IhsURKC4qqPCGV-Wk3Z5-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-15" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-2" target="IhsURKC4qqPCGV-Wk3Z5-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-16" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-3" target="IhsURKC4qqPCGV-Wk3Z5-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-17" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-4" target="IhsURKC4qqPCGV-Wk3Z5-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-18" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-7" target="IhsURKC4qqPCGV-Wk3Z5-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-19" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-5" target="IhsURKC4qqPCGV-Wk3Z5-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-20" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-9" target="IhsURKC4qqPCGV-Wk3Z5-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IhsURKC4qqPCGV-Wk3Z5-21" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="IhsURKC4qqPCGV-Wk3Z5-10" target="IhsURKC4qqPCGV-Wk3Z5-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

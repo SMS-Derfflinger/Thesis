@@ -1,0 +1,88 @@
+<mxfile host="Electron" modified="2026-05-02T08:47:26.794Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.0 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="xPvmI7onxYEpRuJNCU85" version="24.4.0" type="device">
+  <diagram name="块设备请求处理流程图" id="_LltRLBP41SkB84iFcxb">
+    <mxGraphModel dx="1789" dy="869" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="CPUqDomaJHGt63dAgV96-2" value="文件系统或交换区&#xa;发起块I/O请求" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="460" y="80" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-3" value="BufferManager&#xa;获取或分配缓冲区" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="455" y="180" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-4" value="设置读写标志和传输长度" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="455" y="280" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-5" value="BlockDevice::strategy&#xa;将请求加入设备I/O队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="440" y="375" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-6" value="设备是否空闲" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="465" y="490" width="170" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-7" value="start()取队首请求&#xa;调用ATADriver::dev_start" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="710" y="600" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-8" value="设置ATA寄存器与PRD表&#xa;启动DMA传输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="730" y="700" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-9" value="磁盘设备执行I/O" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="730" y="800" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-10" value="磁盘中断到来&#xa;ATADriver::ata_handler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="440" y="800" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-11" value="更新设备状态&#xa;弹出已完成请求&#xa;调用io_done" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="440" y="900" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-12" value="唤醒等待I/O完成的进程&#xa;同步请求返回结果" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="440" y="1000" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-13" value="请求处理结束" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="475" y="1100" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-14" value="若出错且未超重试次数&#xa;重新启动请求" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="140" y="800" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-15" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-2" target="CPUqDomaJHGt63dAgV96-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-16" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-3" target="CPUqDomaJHGt63dAgV96-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-17" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-4" target="CPUqDomaJHGt63dAgV96-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-18" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-5" target="CPUqDomaJHGt63dAgV96-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-19" value="是" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-6" target="CPUqDomaJHGt63dAgV96-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-20" value="否" style="endArrow=block;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-6" target="CPUqDomaJHGt63dAgV96-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-21" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-7" target="CPUqDomaJHGt63dAgV96-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-22" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-8" target="CPUqDomaJHGt63dAgV96-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-23" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-9" target="CPUqDomaJHGt63dAgV96-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-24" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-10" target="CPUqDomaJHGt63dAgV96-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-25" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-11" target="CPUqDomaJHGt63dAgV96-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-26" style="endArrow=block;html=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-12" target="CPUqDomaJHGt63dAgV96-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CPUqDomaJHGt63dAgV96-27" value="重试路径" style="endArrow=block;html=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="CPUqDomaJHGt63dAgV96-10" target="CPUqDomaJHGt63dAgV96-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
