@@ -1,0 +1,68 @@
+\chapter{测试与结果分析}
+
+\section{测试方案设计}
+
+\subsection{测试环境与指标设计}
+
+本章测试的目标是评估系统在完成 Rust 重构和 RISC-V 迁移之后的功能正确性与性能表现，并分析不同实现方案之间的差异。测试内容主要分为三个方面：第一，进行功能测试，验证文件系统、设备管理和内存分配等核心模块是否能够稳定工作；第二，进行性能测试，测量系统调用延迟、文件 I/O 吞吐量和内存分配性能等关键指标；第三，对比 Rust 与 C++版本、RISC-V 与 IA32 版本在性能上的差异，并结合体系结构与实现机制分析原因。为了保证对比结果具有可解释性，将测试对象划分为以下几组：C++ + IA32 原始版本、Rust + IA32 重构版本、Rust + RISC-V 迁移版本。测试环境统一使用 QEMU虚拟机，以减少物理硬件差异对结果的影响，并固定以下条件：（1） QEMU 版本（2） 宿主机硬件与操作系统环境（3） 虚拟机分配内存大小（4） 编译优化选项与编译器版本性能测试方面，对于 IA32 版本和 RISC-V 版本，保持相同的磁盘镜像、相同的用户态测试程序和一致的测试轮数。若两种架构在启动方式、设备模型或用户程序格式上存在差异，会在测试环境说明中明确指出。总的测试环境如下：
+
+\begin{table}[htbp]
+  \centering
+  \caption{测试环境说明}
+  \begin{tabular}{p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}}
+    \toprule
+    \textbf{测试环境} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
+    \midrule
+    宿主机操作系统 & Windows 11 专业版 & Windows 11 专业版 & Windows 11 专业版 \\
+    QEMU 运行环境 & WSL2 & WSL2 & WSL2 \\
+    QEMU 版本 & i386 6.2.0 & i386 6.2.0 & riscv64 10.0.2 \\
+    QEMU 分配内存大小 & 128MB & 128MB & 128MB \\
+    编译器版本 & g++ 11.4.0 & rustc 1.96.0-nightly & rustc 1.96.0-nightly \\
+    编译选项 & 无编译优化 & --release & --release \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+测试指标方面，本章围绕以下三类性能指标展开：文件系统相关系统调用延迟：
+
+open、close、read、write、stat、seek 等常用文件系统相关系统调用的平均运行时间和延迟。文件 I/O 吞吐量，包括小块读写与大块读写的差异。内存分配性能，包括小对象动态分配性能、大块内存申请性能，以及重复分配释放场景下的平均开销。
+
+\subsection{测试程序设计}
+
+本章基于现有 programs/目录下的已有用户态程序添加了三类用户态测试程序扩展实现，具体可见附录。系统调用延迟测试程序 syscall\_bench.c：基于 performance.c 的结构，循环执行指定文件系统系统调用若干次，使用 times()记录开始和结束时间，计算平均延迟。文件 I/O 吞吐量测试程序 io\_throughput.c：基于 copyfile.c 扩展，反复进行固定大小文件的顺序读写，统计总字节数和总耗时，计算吞吐量。内存分配性能测试程序 malloc\_bench.c：基于 malloc.c 扩展，循环调用 malloc/free，分别测试：小块对象分配（64B、128B、256B）、中等块分配（512B、1KB）、大块分配（2KB、4KB），并记录总耗时。
+
+\section{功能测试}
+
+功能测试主要验证重构后文件系统、内存管理功能是否正确。测试主要验证页分配、堆分配和用户空间增长是否正常，文件创建、打开、关闭和读写，目录创建与路径解析、文件系统和 shell 长期运行后的稳定性等。测试时直接利用现有 ls、cat、mkdir、forks 等用户程序，并手工输入命令验证运行结果。这类测试虽然不直接给出性能结论，但可以验证系统的稳定性。经测试，系统的文件系统和内存管理均能稳定运行，文件操作正常，用户内存分配正常，可以创建多个子进程后仍稳定运行。
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.78\textwidth}{\centering 原 Word/PDF 中此处为示意图或截图，迁移到 LaTeX 后请替换为对应图片。}}
+  \caption{Rust IA32 功能测试部分截图}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\parbox{0.78\textwidth}{\centering 原 Word/PDF 中此处为示意图或截图，迁移到 LaTeX 后请替换为对应图片。}}
+  \caption{Rust RISC-V 功能测试部分截图}
+\end{figure}
+
+\section{性能测试}
+
+性能测试中，所有性能数据都在 QEMU 虚拟机中由用户态测试程序直接输出到控制台，再手工记录收集。每组测试至少执行 5 次，取平均值；若波动较大，去掉最大值和最小值后再取平均。为提高可比性，保证以下条件一致：每次测试前文件系统状态相同、使用同一批测试文件、不同时运行其他干扰程序等。输出结果统一为表格和柱状图，单位使用“微秒/次”。文件系统相关系统调用延迟测试的基本方法为：在单个用户程序中循环执行同一种系统调用若干次，记录循环前后的时间差，再除以调用次数，得到平均延迟。其中缓冲区大小为 512 字节，目标文件均为 ls 程序，系统调用执行的次数均为 10000 次，得到的测试结果如下：
+
+\begin{table}[htbp]
+  \centering
+  \caption{文件系统相关系统调用平均延迟（微秒）}
+  \begin{tabular}{p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}p{0.22\textwidth}}
+    \toprule
+    \textbf{系统调用} & \textbf{C++ + IA32} & \textbf{Rust + IA32} & \textbf{Rust + RISC-V} \\
+    \midrule
+    open/close & 20 & 8 & 13 \\
+    read & 25 & 6 & 6 \\
+    seek & 1 & 1 & 1 \\
+    stat & 16 & 6 & 8 \\
+    write & 103 & 90 & 106 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

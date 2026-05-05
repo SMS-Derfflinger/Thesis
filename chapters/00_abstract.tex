@@ -1,11 +1,15 @@
 \MakeAbstract{
-    摘要通常是一篇文章、论文、报告或其他文本的简短概括。它的目的是帮助读者了解文本的主要内容和结论，以便决定是否需要继续阅读原文。摘要通常包含文本的主题、目的、方法、结果和结论等方面的信息，并尽可能简洁明了地呈现。好的摘要应该能够概括文本的重点，同时避免使用不必要的细节和专业术语，以便广大读者能够轻松理解。
+    操作系统教学需要兼顾经典机制讲解与现代系统软件实践。Unix V6++ 是同济大学长期使用的操作系统教学平台，其结构清晰、代码规模适中，适合展示进程管理、内存管理、文件系统和设备管理等核心机制。但原系统基于 IA32 架构和 C++ 实现，存在体系结构较旧、内存安全依赖人工保证、模块边界不够清晰等问题，难以充分体现当前系统编程领域的发展趋势。
 
-    此外，摘要通常也是学术界和研究人员评估一篇文献的重要依据之一。在文献检索和筛选过程中，人们通常会根据摘要来决定是否进一步查看完整的文献。因此，撰写一个清晰、准确、简洁的摘要对于文献的传播和影响力至关重要。在撰写摘要时，作者应该遵循文献的格式要求和撰写规范，同时结合文本的内容和目的，将摘要撰写得准确、简洁、易懂，以提高文献的传播和影响力。
-}{关键词1，关键词2，关键词3}
+    本课题围绕 Unix V6++ 的现代化改造展开，首先分析原系统内存管理、文件系统、缓冲区缓存和设备管理模块的实现方式与局限；随后使用 Rust 对关键模块进行重构，在保留原有教学结构和 Unix V6 风格设计的基础上，引入类型化地址抽象、Buddy 与 Slab 分层内存分配、引用封装、生命周期管理和显式错误处理等机制；最后探索向 RISC-V 64 位架构迁移，适配分页、串口、块设备和 QEMU 虚拟化运行环境。
+
+    测试结果表明，重构后的系统能够保持基本功能正确性，在文件系统与内存管理等核心路径上具有更清晰的模块组织和更好的可维护性。Rust 与 RISC-V 的引入在保留 Unix V6++ 教学价值的同时，为教学操作系统提供了更符合现代体系结构和系统编程实践的发展方向。
+}{Unix V6++，Rust，RISC-V，内存管理，文件系统，操作系统教学}
 
 \MakeAbstractEng{
-    An abstract is usually a short summary of an article, essay, report, or other text. Its purpose is to help the reader understand the main content and conclusions of the text so that he or she can decide whether he or she needs to continue reading the original text. The abstract usually contains information about the topic, purpose, methods, results, and conclusions of the text and is presented as concisely and clearly as possible. A good abstract should be able to summarize the main points of the text while avoiding unnecessary details and jargon so that it can be easily understood by a wide audience.
+    Operating system education needs to combine classical kernel mechanisms with modern system programming practice. Unix V6++ is a teaching operating system platform used at Tongji University. Its small code base and clear structure make it suitable for demonstrating process management, memory management, file systems, and device management. However, the original system is implemented in C++ on the IA32 architecture, which leads to limitations such as outdated architecture assumptions, manually maintained memory safety, and unclear module boundaries.
 
-    In addition, abstracts are often one of the most important bases on which academics and researchers evaluate a piece of literature. During the literature search and selection process, people often base their decision to look further into the complete literature on the abstract. Therefore, writing a clear, accurate, and concise abstract is crucial to the dissemination and impact of the literature. When writing an abstract, authors should follow the formatting requirements and writing specifications of the literature, as well as combine the content and purpose of the text to write an accurate, concise, and easy-to-understand abstract in order to improve the dissemination and impact of the literature.
-}{Keyword 1, Keyword 2, Keyword 3}
+    This thesis studies the modernization of Unix V6++. It first analyzes the design and limitations of the original memory management, file system, buffer cache, and device management modules. Then it refactors key modules in Rust while preserving the teaching-oriented structure and Unix V6 style design. The refactoring introduces typed address abstractions, a Buddy and Slab based layered allocator, reference wrappers, lifecycle management, and explicit error handling. Finally, the system is partially ported to the RISC-V 64-bit architecture by adapting paging, serial devices, block devices, and the QEMU virtualized environment.
+
+    The test results show that the refactored system preserves basic functional correctness and provides clearer module organization and better maintainability in core paths such as file system operations and memory management. By introducing Rust and RISC-V while retaining the teaching value of Unix V6++, this work provides a practical direction for the evolution of teaching operating systems.
+}{Unix V6++, Rust, RISC-V, memory management, file system, operating system education}
