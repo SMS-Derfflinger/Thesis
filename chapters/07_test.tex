@@ -30,7 +30,7 @@
   \end{tabular}
 \end{table}
 
-性能测试使用三个用户态测试程序完成。系统调用延迟测试程序 \texttt{syscall\_bench.c} 循环执行 open/close、read、seek、stat 和 write 等操作，使用 \texttt{times()} 记录前后时钟并估算平均耗时。内存分配测试程序 \texttt{malloc\_bench.c} 对不同大小的内存块重复执行 malloc/free，用于观察用户态动态分配接口的基本开销。文件 I/O 吞吐量测试程序 \texttt{io\_throughput.c} 反复读取源文件并写入目标文件，统计总传输字节数和估算吞吐率。
+性能测试使用三个用户态测试程序完成，均在仓库中的program/目录下，系统调用延迟测试程序 \texttt{syscall\_bench.c} 循环执行 open/close、read、seek、stat 和 write 等操作，使用 \texttt{times()} 记录前后时钟并估算平均耗时。内存分配测试程序 \texttt{malloc\_bench.c} 对不同大小的内存块重复执行 malloc/free，用于观察用户态动态分配接口的基本开销。文件 I/O 吞吐量测试程序 \texttt{io\_throughput.c} 反复读取源文件并写入目标文件，统计总传输字节数和估算吞吐率。
 
 测试程序使用系统时钟 tick 估算微秒级时间，系统时钟频率为 60Hz。因此，测试结果主要用于观察数量级和版本间相对差异，不作为精确硬件计时结果。原始 C++ 版本暂不支持 malloc 测试所需的用户态动态分配接口，内存分配性能只比较 Rust + IA32 与 Rust + RISC-V 两个版本。
 
