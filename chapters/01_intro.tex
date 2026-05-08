@@ -20,7 +20,7 @@ Unix V6 及其衍生系统长期用于操作系统教学。Lions 对 Unix 第六
 
 Rust 操作系统研究主要沿两条路径展开。一类工作面向教学和实验内核。Writing an OS in Rust 通过逐步构建裸机内核说明了 Rust 在中断、分页和堆分配等场景中的基本用法\cite{oppermannWritingOS}；rCore-Tutorial 将 Rust 的所有权、生命周期和错误处理纳入操作系统实验过程\cite{chen2023rcore}；NPUcore 的实践工作则说明了国内课程环境中使用 Rust 构建教学内核的可行性\cite{zhang2020npucore}。这类系统证明 Rust 能够用于组织页表、分配器和系统调用路径，但也显示出一个共同事实：硬件寄存器访问、上下文切换和页表写入等路径仍需 unsafe 支撑。
 
-另一类工作面向安全内核结构。Tock 在资源受限的微控制器上使用 Rust 构建多程序环境，通过语言安全和有限硬件保护机制组织隔离边界\cite{levy2017tock}；Levy 等在 APSys 2017 进一步讨论了使用 Rust 编写内核时 DMA、USB 和缓冲区缓存等机制所需的 unsafe 抽象\cite{levy2017kernelrust}。Theseus 采用 Rust 重新组织操作系统结构和状态管理，试图减少组件之间长期持有对方状态的现象\cite{boos2020theseus}。RedLeaf 则探索基于 Rust 类型和内存安全的轻量隔离域，并将驱动和系统服务组织为可隔离、可恢复的域\cite{narayanan2020redleaf}。这些研究表明，Rust 在操作系统中的价值并非简单替换 C/C++ 语法，而是借助类型系统重新划定状态共享、资源所有权和模块边界。
+另一类工作面向安全内核结构。Tock 在资源受限的微控制器上使用 Rust 构建多程序环境，通过语言安全和有限硬件保护机制组织隔离边界\cite{levy2017tock}；Levy 等在 APSys 2017 进一步讨论了使用 Rust 编写内核时 DMA、USB 和缓冲区缓存等机制所需的 unsafe 抽象\cite{levy2017kernelrust}。发表在 2020 年 OSDI 会议上的Theseus 采用 Rust 重新组织操作系统结构和状态管理，试图减少组件之间长期持有对方状态的现象\cite{boos2020theseus}。RedLeaf 则探索基于 Rust 类型和内存安全的轻量隔离域，并将驱动和系统服务组织为可隔离、可恢复的域\cite{narayanan2020redleaf}。这些研究表明，Rust 在操作系统中的价值并非简单替换 C/C++ 语法，而是借助类型系统重新划定状态共享、资源所有权和模块边界。
 
 工业界也开始将 Rust 引入内核或内核相关组件。Linux 内核已将 Rust 支持作为实验性基础设施合入主线，用于评估 Rust 在内核抽象和驱动开发中的适用性\cite{linuxkernelRust}；Asterinas 等项目则尝试以 Rust 重新组织系统调用兼容层、内核对象和驱动接口，为安全内核结构提供了另一类工程样本\cite{antgroup2023asterinas}。这些实践为教学内核重构提供了现实参照，但工业项目通常包含复杂的兼容目标和工程约束，并不适合直接作为本科操作系统实验对象。
 
